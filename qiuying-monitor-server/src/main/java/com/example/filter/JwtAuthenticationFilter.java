@@ -1,6 +1,9 @@
 package com.example.filter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.entity.RestBean;
+import com.example.entity.dto.Client;
+import com.example.service.ClientService;
 import com.example.utils.Const;
 import com.example.utils.JwtUtils;
 import jakarta.annotation.Resource;
@@ -25,6 +28,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Resource
     JwtUtils utils;
 
+    @Resource
+    ClientService service;
+
     // 重写OncePerRequestFilter类的doFilterInternal方法
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -32,22 +38,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         // 获取请求头中的Authorization字段
         String authorization = request.getHeader("Authorization");
-        // 解析Authorization字段中的JWT
-        DecodedJWT jwt = utils.resolveJwt(authorization);
-        // 如果JWT不为空
-        if(jwt != null) {
-            // 将JWT转换为UserDetails对象
-            UserDetails user = utils.toUser(jwt);
-            // 创建UsernamePasswordAuthenticationToken对象
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-            // 设置认证详情
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            // 将认证信息放入SecurityContextHolder中
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            // 将用户ID放入请求属性中
-            request.setAttribute(Const.ATTR_USER_ID, utils.toId(jwt));
+        String uri = request.getRequestURI();
+        if (uri.startsWith("/monitor")) {
+            if (!uri.endsWith("/register")) {
+                Client client = service.findClientByToken(authorization);
+                if (client == null) {
+                    response.setStatus(401);
+                    response.getWriter().write(RestBean.failure(401,"未注册").asJsonString());
+                    return;
+                } else {
+                    request.setAttribute(Const.ATTR_CLIENT, client);
+                }
+            }
+        } else {
+            // 解析Authorization字段中的JWT
+            DecodedJWT jwt = utils.resolveJwt(authorization);
+            // 如果JWT不为空
+            if (jwt != null) {
+                // 将JWT转换为UserDetails对象
+                UserDetails user = utils.toUser(jwt);
+                // 创建UsernamePasswordAuthenticationToken对象
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                // 设置认证详情
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                // 将认证信息放入SecurityContextHolder中
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                // 将用户ID放入请求属性中
+                request.setAttribute(Const.ATTR_USER_ID, utils.toId(jwt));
+            }
         }
+
         // 继续执行过滤器链
         filterChain.doFilter(request, response);
     }

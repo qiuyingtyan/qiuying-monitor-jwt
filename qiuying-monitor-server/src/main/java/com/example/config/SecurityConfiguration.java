@@ -52,6 +52,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(conf -> conf
                         // 允许所有对/api/auth/**和/error的访问
                         .requestMatchers("/api/auth/**", "/error").permitAll()
+                        .requestMatchers("monitor/**").permitAll()
                         // 允许所有对/swagger-ui/**和/v3/api-docs/**的访问
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // 其他请求需要具有Const.ROLE_DEFAULT角色
