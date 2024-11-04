@@ -31,10 +31,6 @@ public class MailQueueListener {
         Integer code = (Integer) data.get("code");
         // 根据消息类型创建邮件消息
         SimpleMailMessage message = switch (data.get("type").toString()) {
-            case "register" ->
-                    createMessage("欢迎注册顶针的世界",
-                            "您的邮件注册验证码为: "+code+"，有效时间3分钟，为了保障你的马，请向他人泄露验证码信息。",
-                            email);
             case "reset" ->
                     createMessage("您的密码重置邮件",
                             "你好，您正在执行重置密码操作，验证码: "+code+"，有效时间3分钟，如非本人操作，请无视。",

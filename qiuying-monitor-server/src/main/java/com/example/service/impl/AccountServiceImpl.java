@@ -1,10 +1,8 @@
 package com.example.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.entity.dto.Account;
 import com.example.entity.vo.request.ConfirmResetVO;
-import com.example.entity.vo.request.EmailRegisterVO;
 import com.example.entity.vo.request.EmailResetVO;
 import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
@@ -20,7 +18,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -82,26 +79,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
     }
 
-    // 注册邮箱账号
-    public String registerEmailAccount(EmailRegisterVO info){
-        String email = info.getEmail();
-        String code = this.getEmailVerifyCode(email);
-        if(code == null) return "请先获取验证码";
-        if(!code.equals(info.getCode())) return "验证码错误，请重新输入";
-        if(this.existsAccountByEmail(email)) return "该邮件地址已被注册";
-        String username = info.getUsername();
-        if(this.existsAccountByUsername(username)) return "该用户名已被他人使用，请重新更换";
-        String password = passwordEncoder.encode(info.getPassword());
-        Account account = new Account(null, info.getUsername(),
-                password, email, Const.ROLE_DEFAULT, new Date());
-        if(!this.save(account)) {
-            return "内部错误，注册失败";
-        } else {
-            this.deleteEmailVerifyCode(email);
-            return null;
-        }
-    }
-
     // 重置邮箱账号密码
     @Override
     public String resetEmailAccountPassword(EmailResetVO info) {
@@ -152,13 +129,4 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
                 .one();
     }
 
-    // 根据邮箱判断账号是否存在
-    private boolean existsAccountByEmail(String email){
-        return this.baseMapper.exists(Wrappers.<Account>query().eq("email", email));
-    }
-
-    // 根据用户名判断账号是否存在
-    private boolean existsAccountByUsername(String username){
-        return this.baseMapper.exists(Wrappers.<Account>query().eq("username", username));
-    }
 }
