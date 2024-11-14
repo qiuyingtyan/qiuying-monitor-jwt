@@ -7,13 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="qiuying-monitor-server" />
         <module name="my-project-backend" />
         <module name="qiuying-monitor-client" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="qiuying-monitor-server" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
