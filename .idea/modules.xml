@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/qiuying-monitor-jwt.iml" filepath="$PROJECT_DIR$/qiuying-monitor-jwt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qiuying-monitor-web/qiuying-monitor-web.iml" filepath="$PROJECT_DIR$/qiuying-monitor-web/qiuying-monitor-web.iml" />
     </modules>
   </component>
 </project>
