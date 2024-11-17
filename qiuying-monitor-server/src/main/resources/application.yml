@@ -60,6 +60,10 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   # Web配置
   web:
+    influx:
+      url: http://192.168.56.102:8086
+      user: root
+      password: 12345678
     # 验证配置
     verify:
       # 邮件验证限制
