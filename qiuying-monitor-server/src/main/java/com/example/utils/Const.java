@@ -24,6 +24,6 @@ public final class Const {
     // 邮件队列
     public final static String MQ_MAIL = "mail";
     // 默认角色
-    public final static String ROLE_DEFAULT = "user";
+    public final static String ROLE_DEFAULT = "admin";
 
 }
