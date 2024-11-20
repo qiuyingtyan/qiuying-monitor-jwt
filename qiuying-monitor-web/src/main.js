@@ -7,7 +7,7 @@ import router from './router'
 // 导入axios库，用于发送HTTP请求
 import axios from "axios";
 
-
+import '@/assets/css/element.less'
 import 'flag-icon-css/css/flag-icons.min.css'
 // 导入Element Plus的暗黑主题样式
 import 'element-plus/theme-chalk/dark/css-vars.css'
