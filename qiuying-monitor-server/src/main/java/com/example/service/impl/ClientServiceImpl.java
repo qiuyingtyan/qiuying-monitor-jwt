@@ -6,6 +6,7 @@ import com.example.entity.dto.Client;
 import com.example.entity.dto.ClientDetail;
 import com.example.entity.vo.request.ClientDetailVO;
 import com.example.entity.vo.request.RenameClientVO;
+import com.example.entity.vo.request.RenameNodeVO;
 import com.example.entity.vo.request.RuntimeDetailVO;
 import com.example.entity.vo.response.ClientDetailsVO;
 import com.example.entity.vo.response.ClientPreviewVO;
@@ -109,6 +110,13 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
     @Override
     public void renameClient(RenameClientVO vo) {
         this.update(Wrappers.<Client>update().eq("id", vo.getId()).set("name", vo.getName()));
+        this.initClientCache();
+    }
+
+    @Override
+    public void renameNode(RenameNodeVO vo) {
+        this.update(Wrappers.<Client>update().eq("id", vo.getId())
+                .set("node", vo.getNode()).set("location", vo.getLocation()));
         this.initClientCache();
     }
 
